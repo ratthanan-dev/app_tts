@@ -1,0 +1,61 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "TTS Studio",
+  "version": "1.0.0",
+  "identifier": "com.ratthanan.tts-studio",
+  "build": {
+    "frontendDist": "../src"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "TTS Studio",
+        "width": 900,
+        "height": 700,
+        "minWidth": 600,
+        "minHeight": 500,
+        "center": true,
+        "resizable": true,
+        "decorations": true,
+        "transparent": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "resources": [
+      "../python/**/*"
+    ]
+  },
+  "plugins": {
+    "shell": {
+      "open": true,
+      "scope": [
+        {
+          "name": "python",
+          "cmd": "python3",
+          "args": true
+        }
+      ]
+    },
+    "fs": {
+      "scope": [
+        "$APPDATA/**",
+        "$RESOURCE/**",
+        "$HOME/app_tts/**"
+      ]
+    }
+  }
+}

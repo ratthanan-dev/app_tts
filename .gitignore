@@ -1,0 +1,19 @@
+# Node / Frontend
+node_modules/
+dist/
+.DS_Store
+
+# Rust / Tauri
+src-tauri/target/
+target/
+**/*.rs.bk
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.env
+
+# App Specific
+audio_files/*.mp3
+sample.txt

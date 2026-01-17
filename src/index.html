@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTS Studio</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body data-theme="dark">
+    <div class="app-container">
+        <!-- Navigation -->
+        <nav class="nav-bar glass-card">
+            <div class="nav-brand">
+                <span class="brand-icon">🎙️</span>
+                <span class="brand-text" data-i18n="appName">TTS Studio</span>
+            </div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-view="main" data-i18n="navMain">หน้าหลัก</button>
+                <button class="nav-tab" data-view="history" data-i18n="navHistory">ประวัติ</button>
+            </div>
+            <button class="nav-settings" data-view="settings" aria-label="Settings">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                    </path>
+                </svg>
+            </button>
+        </nav>
+
+        <!-- Main View -->
+        <main class="view active" id="main-view">
+            <div class="main-content">
+                <!-- Text Input Section -->
+                <section class="input-section glass-card">
+                    <div class="section-header">
+                        <h2 data-i18n="inputTitle">ป้อนข้อความ</h2>
+                        <div class="input-actions">
+                            <button class="btn-icon" id="btn-clear" title="ล้างข้อความ">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2">
+                                    </path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="text-input" placeholder="พิมพ์หรือวางข้อความที่ต้องการแปลงเป็นเสียง..."
+                        data-i18n-placeholder="inputPlaceholder"></textarea>
+
+                    <!-- File Drop Zone -->
+                    <div class="drop-zone" id="drop-zone">
+                        <div class="drop-zone-content">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5">
+                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"></path>
+                            </svg>
+                            <p data-i18n="dropZoneText">ลากไฟล์มาวางที่นี่ หรือ <span class="link">คลิกเลือก</span></p>
+                            <small data-i18n="dropZoneHint">รองรับ .txt, .pdf</small>
+                        </div>
+                        <input type="file" id="file-input" accept=".txt,.pdf" hidden>
+                    </div>
+
+                    <div class="char-count">
+                        <span id="char-count">0</span> <span data-i18n="characters">ตัวอักษร</span>
+                    </div>
+                </section>
+
+                <!-- Generate Section -->
+                <section class="generate-section">
+                    <button class="btn-generate glass-card" id="btn-generate" disabled>
+                        <span class="btn-text" data-i18n="generate">สร้างเสียง</span>
+                        <span class="btn-icon-right">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                        </span>
+                    </button>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-container hidden" id="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <div class="progress-info">
+                            <span id="progress-text" data-i18n="generating">กำลังสร้างเสียง...</span>
+                            <span id="progress-percent">0%</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Audio Player Section -->
+                <!-- Player moved to global footer -->
+            </div>
+        </main>
+
+        <!-- History View -->
+        <main class="view" id="history-view">
+            <div class="history-content">
+                <div class="section-header">
+                    <h2 data-i18n="historyTitle">ประวัติไฟล์เสียง</h2>
+                </div>
+                <div class="history-list" id="history-list">
+                    <!-- History items will be populated here -->
+                    <div class="history-empty" id="history-empty">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        <p data-i18n="historyEmpty">ยังไม่มีไฟล์เสียง</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Settings View -->
+        <main class="view" id="settings-view">
+            <div class="settings-content">
+                <div class="section-header">
+                    <h2 data-i18n="settingsTitle">ตั้งค่า</h2>
+                </div>
+
+                <div class="settings-group glass-card">
+                    <h3 data-i18n="voiceSettings">เสียงพูด</h3>
+                    <div class="setting-item">
+                        <label data-i18n="voiceGender">เพศเสียง</label>
+                        <div class="toggle-group">
+                            <button class="toggle-btn active" data-value="female" data-setting="voiceGender"
+                                data-i18n="female">หญิง</button>
+                            <button class="toggle-btn" data-value="male" data-setting="voiceGender"
+                                data-i18n="male">ชาย</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-group glass-card">
+                    <h3 data-i18n="appSettings">แอปพลิเคชัน</h3>
+                    <div class="setting-item">
+                        <label data-i18n="language">ภาษา</label>
+                        <div class="toggle-group">
+                            <button class="toggle-btn active" data-value="th" data-setting="language">ไทย</button>
+                            <button class="toggle-btn" data-value="en" data-setting="language">English</button>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label data-i18n="theme">ธีม</label>
+                        <div class="toggle-group">
+                            <button class="toggle-btn active" data-value="dark" data-setting="theme"
+                                data-i18n="dark">มืด</button>
+                            <button class="toggle-btn" data-value="light" data-setting="theme"
+                                data-i18n="light">สว่าง</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-group glass-card">
+                    <h3 data-i18n="aboutApp">เกี่ยวกับ</h3>
+                    <div class="about-info">
+                        <p><strong>TTS Studio</strong></p>
+                        <p>Version 1.0.0</p>
+                        <p>Powered by Edge-TTS</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Global Player Section -->
+        <section class="player-section glass-card hidden" id="player-section">
+            <div class="player-mini-layout">
+                <div class="player-left">
+                    <button class="btn-play-mini" id="btn-play">
+                        <svg class="icon-play" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        <svg class="icon-pause hidden" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="6" y="4" width="4" height="16"></rect>
+                            <rect x="14" y="4" width="4" height="16"></rect>
+                        </svg>
+                    </button>
+
+                    <div class="track-info">
+                        <div class="filename-display" id="filename-display">audio.mp3</div>
+                        <div class="player-timeline-mini">
+                            <span id="current-time">0:00</span>
+                            <input type="range" class="timeline-slider" id="timeline-slider" min="0" max="100"
+                                value="0">
+                            <span id="total-time">0:00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="player-right">
+                    <div class="volume-control">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        </svg>
+                        <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="80">
+                    </div>
+
+                    <button class="btn-icon-mini" id="btn-restart" title="เริ่มใหม่">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M1 4v6h6M23 20v-6h-6"></path>
+                            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+                        </svg>
+                    </button>
+
+                    <button class="btn-icon-mini" id="btn-download" title="ดาวน์โหลด">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Hidden elements needed for logic but not UI -->
+                <select id="speed-select" hidden>
+                    <option value="1"></option>
+                </select>
+                <input type="text" id="filename-input" hidden>
+            </div>
+        </section>
+    </div>
+
+    <audio id="audio-player" hidden></audio>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/audio-player.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

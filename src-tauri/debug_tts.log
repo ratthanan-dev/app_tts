@@ -1,0 +1,39 @@
+2026-01-17 12:03:06,395 - INFO - Starting TTS: text='สวัสดี', gender=female, out_dir=/home/ratthanan/.local/share/com.ratthanan.tts-studio/audio_files
+2026-01-17 12:03:06,396 - INFO - Selected voice: th-TH-PremwadeeNeural
+2026-01-17 12:03:06,396 - DEBUG - Using selector: EpollSelector
+2026-01-17 12:03:07,795 - INFO - TTS Result: {'success': True, 'output': '/home/ratthanan/.local/share/com.ratthanan.tts-studio/audio_files/20260117_120306.mp3'}
+2026-01-17 18:47:45,268 - INFO - Starting TTS: text='สวัสดีครับ ทดสอบระบบแปลงข้อความเป็นเสียง', gender=female, out_dir=/home/ratthanan/.local/share/com.ratthanan.tts-studio/audio_files
+2026-01-17 18:47:45,269 - INFO - Selected voice: th-TH-PremwadeeNeural
+2026-01-17 18:47:45,269 - DEBUG - Using selector: EpollSelector
+2026-01-17 18:47:48,772 - INFO - TTS Result: {'success': True, 'output': '/home/ratthanan/.local/share/com.ratthanan.tts-studio/audio_files/20260117_184745.mp3'}
+2026-01-17 20:14:15,836 - INFO - Starting TTS: text='สวัสดี', gender=male, out_dir=/home/ratthanan/.local/share/com.ratthanan.tts-studio/audio_files
+2026-01-17 20:14:15,836 - INFO - Selected voice: th-TH-NiwatNeural
+2026-01-17 20:14:15,837 - DEBUG - Using selector: EpollSelector
+2026-01-17 20:14:16,927 - INFO - TTS Result: {'success': True, 'output': '/home/ratthanan/.local/share/com.ratthanan.tts-studio/audio_files/20260117_201415.mp3'}
+2026-01-17 20:18:47,394 - INFO - Starting TTS: text='สวัสดีครับท่านคณะกรรมการและผู้เข้าร่วมทุกท่าน
+วันนี้ทีมของเราขอนําเสนอสิ่งประดิษฐ์ในโจทย์ “การประชาสัมพันธ์อัจฉริยะ”
+คือ หุ่นยนต์ประชาสัมพันธ์อัจฉริยะ ‘น้องน่าน’
+ก่อนอื่นขอเริ่มจาก “ปัญหาจริง” ในหน่วยงานครับ
+ปัจจุบันงานประชาสัมพันธ์ยังพึ่งพาเจ้าหน้าที่ ป้ายประกาศ หรือเอกสารเป็นหลัก
+ทําให้เกิดข้อจํากัดสําคัญ เช่น
+• ผู้ใช้บริการต้องรอคิวถาม–ตอบ
+• เจ้าหน้าที่ต้องตอบคําถามซ้ํา ๆ ทุกวัน
+• ข้อมูลอัปเดตไม่ทันเหตุการณ์ และกระจายหลายช่องทาง
+• ผลคือประสิทธิภาพการบริการลดลง และภาพลักษณ์องค์กรยังไม่ทันยุคดิจิทัล
+ดังนั้นแนวคิดของเรา คือสร้างนวัตกรรมที่ “สื่อสารแทนคนได้อย่างฉลาด” แต่ยังคง
+ความเป็นมิตรและใช้งานง่าย น้องน่าน จึงถูกพัฒนาให้เป็น ผู้ช่วยประชาสัมพันธ์อัจฉริยะ
+ที่ตอบคําถามและให้ข้อมูลได้ เร็ว ถูกต้อง และโต้ตอบแบบเรียลไทม์ครอบคลุมทั้งข้อมูล
+ประชาสัมพันธ์ของหน่วยงาน และองค์ความรู้เชิงพื้นที่จังหวัดน่าน เช่น สถานที่ท่องเที่ยว
+ร้านอาหาร ที่พัก ประวัติศาสตร์ และวัฒนธรรม
+
+ต่อไปผมขออธิบาย การออกแบบ วิเคราะห์ระบบ และการบูรณาการ AI ของน้องน่าน
+ครับ
+ภาพรวมการทํางานของน้องน่านแบ่งเป็น 3 ส่วนหลัก
+• หนึ่ง : ส่วนรับคําถาม ผู้ใช้ถามได้ 2 ช่องทาง คือ พิมพ์ข้อความ และ พูดด้วยเสียง
+• สอง : ส่วนประมวลผลอัจฉริยะ ระบบจะวิเคราะห์คําถาม แล้วไปดึงข้อมูลที่
+เกี่ยวข้องจากฐานความรู้
+• สาม : ส่วนแสดงผล แสดงคําตอบเป็นข้อความ พร้อมเสียงพูด และมีอวตาร
+3 มิติ เพื่อเพิ่มความเป็นธรรมชาติในการสื่อสาร', gender=male, out_dir=/home/ratthanan/.local/share/com.ratthanan.tts-studio/audio_files
+2026-01-17 20:18:47,394 - INFO - Selected voice: th-TH-NiwatNeural
+2026-01-17 20:18:47,394 - DEBUG - Using selector: EpollSelector
+2026-01-17 20:19:02,758 - INFO - TTS Result: {'success': True, 'output': '/home/ratthanan/.local/share/com.ratthanan.tts-studio/audio_files/20260117_201847.mp3'}
