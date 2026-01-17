@@ -2,6 +2,8 @@
 
 แอปพลิเคชัน Desktop สำหรับแปลงข้อความเป็นเสียงพูด ด้วย **Microsoft Edge TTS**
 
+[![English](https://img.shields.io/badge/lang-English-blue)](README_EN.md) [![Thai](https://img.shields.io/badge/lang-Thai-red)](README.md)
+
 ![TTS Studio](https://img.shields.io/badge/version-1.0.0-blue) ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-green) ![Size](https://img.shields.io/badge/size-~10MB-orange)
 
 ## ✨ ฟีเจอร์หลัก
