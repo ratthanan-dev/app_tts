@@ -1,9 +1,11 @@
-use std::process::Command;
 use std::fs;
 use std::path::PathBuf;
 use serde::{Deserialize, Serialize};
-use tauri::Manager;
+use tauri::{Manager, Emitter};
 use base64::{Engine as _, engine::general_purpose};
+use tokio::process::Command;
+use tokio::io::{AsyncBufReadExt, BufReader};
+use std::process::Stdio;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct TtsResult {
@@ -11,6 +13,12 @@ pub struct TtsResult {
     output: Option<String>,
     filename: Option<String>,
     error: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+pub struct ProgressPayload {
+    progress: i32,
+    message: String,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -22,7 +30,7 @@ pub struct AudioFile {
 
 /// Generate TTS audio from text using Python edge-tts
 #[tauri::command]
-fn generate_tts(
+async fn generate_tts(
     app: tauri::AppHandle,
     text: String,
     gender: String,
@@ -31,7 +39,6 @@ fn generate_tts(
 ) -> TtsResult {
     let audio_dir = get_audio_dir(&app);
     
-    // Ensure audio directory exists
     if let Err(e) = fs::create_dir_all(&audio_dir) {
         return TtsResult {
             success: false,
@@ -41,12 +48,9 @@ fn generate_tts(
         };
     }
     
-    // Get Python script path
     let python_script = get_python_script_path(&app);
     
-    // Run Python TTS engine
-    println!("DEBUG: Executing Python: {:?} with text: {}", python_script, text);
-    let output = Command::new("python3")
+    let mut child = match Command::new("python3")
         .arg(&python_script)
         .arg("--text")
         .arg(&text)
@@ -58,56 +62,74 @@ fn generate_tts(
         .arg(&pitch)
         .arg("--output-dir")
         .arg(&audio_dir)
-        .output();
-    
-    match output {
-        Ok(result) => {
-            println!("DEBUG: Python exit status: {}", result.status);
-            println!("DEBUG: Python stdout: {}", String::from_utf8_lossy(&result.stdout));
-            println!("DEBUG: Python stderr: {}", String::from_utf8_lossy(&result.stderr));
-
-            if result.status.success() {
-                let stdout = String::from_utf8_lossy(&result.stdout);
-                // Parse the last JSON line (result)
-                if let Some(last_line) = stdout.lines().last() {
-                    if let Ok(parsed) = serde_json::from_str::<serde_json::Value>(last_line) {
-                        if parsed["success"].as_bool().unwrap_or(false) {
-                            let output_path = parsed["output"].as_str().unwrap_or("");
-                            let filename = output_path.split('/').last().unwrap_or("audio.mp3");
-                            return TtsResult {
-                                success: true,
-                                output: Some(output_path.to_string()),
-                                filename: Some(filename.to_string()),
-                                error: None,
-                            };
-                        }
-                    }
-                }
-                TtsResult {
-                    success: false,
-                    output: None,
-                    filename: None,
-                    error: Some(format!("Failed to parse TTS output. Stdout: {}", stdout)),
-                }
-            } else {
-                let stderr = String::from_utf8_lossy(&result.stderr);
-                TtsResult {
-                    success: false,
-                    output: None,
-                    filename: None,
-                    error: Some(format!("TTS process failed. Exit code: {:?}. Stderr: {}", result.status.code(), stderr)),
-                }
-            }
-        }
-        Err(e) => {
-            println!("DEBUG: Failed to execute python command: {}", e);
-            TtsResult {
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn() {
+            Ok(c) => c,
+            Err(e) => return TtsResult {
                 success: false,
                 output: None,
                 filename: None,
                 error: Some(format!("Failed to run Python command: {}", e)),
+            },
+        };
+
+    let stdout = child.stdout.take().unwrap();
+    let mut reader = BufReader::new(stdout).lines();
+    let mut last_line = String::new();
+
+    while let Ok(Some(line)) = reader.next_line().await {
+        if let Ok(parsed) = serde_json::from_str::<serde_json::Value>(&line) {
+            if let Some(progress) = parsed["progress"].as_i64() {
+                let message = parsed["message"].as_str().unwrap_or("").to_string();
+                let _ = app.emit("tts-progress", ProgressPayload {
+                    progress: progress as i32,
+                    message,
+                });
             }
-        },
+            last_line = line;
+        }
+    }
+
+    let status = child.wait().await;
+    
+    match status {
+        Ok(s) if s.success() => {
+            if let Ok(parsed) = serde_json::from_str::<serde_json::Value>(&last_line) {
+                if parsed["success"].as_bool().unwrap_or(false) {
+                    let output_path = parsed["output"].as_str().unwrap_or("");
+                    let filename = output_path.split('/').last().unwrap_or("audio.mp3");
+                    return TtsResult {
+                        success: true,
+                        output: Some(output_path.to_string()),
+                        filename: Some(filename.to_string()),
+                        error: None,
+                    };
+                }
+            }
+            TtsResult {
+                success: false,
+                output: None,
+                filename: None,
+                error: Some(format!("Failed to parse TTS output. Last line: {}", last_line)),
+            }
+        }
+        Ok(s) => {
+            TtsResult {
+                success: false,
+                output: None,
+                filename: None,
+                error: Some(format!("TTS process failed with exit code: {:?}", s.code())),
+            }
+        }
+        Err(e) => {
+            TtsResult {
+                success: false,
+                output: None,
+                filename: None,
+                error: Some(format!("Failed to wait for TTS process: {}", e)),
+            }
+        }
     }
 }
 
@@ -142,7 +164,6 @@ fn get_audio_files(app: tauri::AppHandle) -> Vec<AudioFile> {
         }
     }
     
-    // Sort by created time (newest first)
     files.sort_by(|a, b| b.created.cmp(&a.created));
     files
 }
@@ -168,8 +189,7 @@ fn rename_file(old_path: String, new_name: String) -> Result<String, String> {
 /// Parse PDF file
 #[tauri::command]
 fn parse_pdf(path: String) -> Result<String, String> {
-    // Try using pdftotext command
-    let output = Command::new("pdftotext")
+    let output = std::process::Command::new("pdftotext")
         .arg("-layout")
         .arg(&path)
         .arg("-")
@@ -200,8 +220,6 @@ fn get_audio_dir(app: &tauri::AppHandle) -> PathBuf {
 }
 
 fn get_python_script_path(app: &tauri::AppHandle) -> PathBuf {
-    // In dev mode, use relative path
-    // In production, use bundled resource
     let resource_path = app.path()
         .resource_dir()
         .ok()
@@ -213,8 +231,6 @@ fn get_python_script_path(app: &tauri::AppHandle) -> PathBuf {
         }
     }
     
-    // Fallback to relative path (dev mode)
-    // When running 'tauri dev', CWD is often src-tauri
     PathBuf::from("../python").join("tts_engine.py")
 }
 

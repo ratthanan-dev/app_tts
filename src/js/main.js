@@ -4,6 +4,7 @@
 
 // Import Tauri API
 const { invoke, convertFileSrc } = window.__TAURI__.core;
+const { listen } = window.__TAURI__.event;
 
 // State
 let isGenerating = false;
@@ -36,7 +37,17 @@ document.addEventListener('DOMContentLoaded', () => {
     initGenerate();
     initSettings();
     loadHistory();
+    initEvents();
 });
+
+async function initEvents() {
+    if (listen) {
+        await listen('tts-progress', (event) => {
+            const { progress, message } = event.payload;
+            updateProgress(progress, message);
+        });
+    }
+}
 
 // Navigation
 function initNavigation() {

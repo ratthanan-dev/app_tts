@@ -1,0 +1,8 @@
+2026-05-22 23:17:15,912 - INFO - Starting TTS: text='สวัสดี', gender=female, out_dir=audio_files
+2026-05-22 23:17:15,912 - INFO - Selected voice: th-TH-PremwadeeNeural
+2026-05-22 23:17:15,912 - DEBUG - Using selector: EpollSelector
+2026-05-22 23:17:16,616 - INFO - TTS Result: {'success': True, 'output': 'audio_files/20260522_231715.mp3'}
+2026-05-22 23:17:50,444 - INFO - Starting TTS: text='ยินดีด้วยครับฮันเตอร์! การเชื่อมต่อ **Antigravity SDK (Gemini)** เข้ากับ **THE GOD-SYSTEM** จะทำให้โปรเจกต์นี้ก้าวกระโดดจากเว็บแอปธรรมดากลายเป็น ระบบผู้ช่วยอัจฉริยะแบบในมังงะ ที่มีชีวิตชีวา มีความน่าเกรงขาม และโต้ตอบกับฮันเตอร์ได้จริงๆ ครับ!', gender=female, out_dir=audio_files
+2026-05-22 23:17:50,444 - INFO - Selected voice: th-TH-PremwadeeNeural
+2026-05-22 23:17:50,444 - DEBUG - Using selector: EpollSelector
+2026-05-22 23:17:54,558 - INFO - TTS Result: {'success': True, 'output': 'audio_files/20260522_231750.mp3'}

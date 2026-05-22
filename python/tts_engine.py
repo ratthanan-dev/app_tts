@@ -15,13 +15,6 @@ import edge_tts
 from lang_detector import detect_language
 import logging
 
-# Setup logging
-logging.basicConfig(
-    filename='debug_tts.log',
-    level=logging.DEBUG,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
-
 
 # Voice mapping
 VOICES = {
@@ -91,6 +84,14 @@ def main():
     # Ensure output directory exists
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Setup logging inside output directory to prevent triggering Tauri dev rebuilds
+    log_path = output_dir / 'debug_tts.log'
+    logging.basicConfig(
+        filename=str(log_path),
+        level=logging.DEBUG,
+        format='%(asctime)s - %(levelname)s - %(message)s'
+    )
     
     logging.info(f"Starting TTS: text='{args.text}', gender={args.gender}, out_dir={output_dir}")
 
